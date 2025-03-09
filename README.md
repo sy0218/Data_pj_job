@@ -1,7 +1,11 @@
->
-              o
+# 🎯 Project 
+- **프로젝트 이름: 채용 공고 with 기업 분석**
+- **프로젝트 설명: testtest**
 
-              ://github.com/sy0218"><img src="https://avatars.githubusercontent.com/u/114718389?v=4" width="150px"/></a>
+<br><br>
+
+# ⭐️Project Members (팀원 및 팀 소개)
+| <a href="https://github.com/sy0218"><img src="https://avatars.githubusercontent.com/u/114718389?v=4" width="150px"/></a>
 | <a href="https://github.com/Parkjiwonha"><img src="https://avatars.githubusercontent.com/u/50561114?v=4" width="150px"/></a>
 
 <br><br>

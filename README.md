@@ -21,7 +21,7 @@
 
 # ✅Project Directory (프로젝트 트리)
 ```plaintext
-/job/
+/Data_pj_job/
 ├── test/
 │   ├── test.txt
 │   └── test.txt1

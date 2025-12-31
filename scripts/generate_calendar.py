@@ -1,40 +1,91 @@
 import calendar
+from datetime import datetime
 from pathlib import Path
-from datetime import date
 
-YEAR = date.today().year
-BASE = Path("history")
-BASE.mkdir(exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parents[1]
+HISTORY_DIR = BASE_DIR / "history"
+README_PATH = BASE_DIR / "README.md"
 
-cal = calendar.Calendar(firstweekday=0)  # Monday
+HISTORY_DIR.mkdir(exist_ok=True)
 
-for month in range(1, 13):
-    prev_y, prev_m = (YEAR, month - 1) if month > 1 else (YEAR - 1, 12)
-    next_y, next_m = (YEAR, month + 1) if month < 12 else (YEAR + 1, 1)
+today = datetime.today()
+year = today.year
+month = today.month
+today_str = today.strftime("%Y-%m-%d")
 
-    lines = []
-    lines.append(f"# 📆 {YEAR}년 {month}월\n")
-    lines.append(
-        f'<p align="center">'
-        f'<a href="./{prev_y}-{prev_m:02d}.md">⬅ {prev_y}.{prev_m:02d}</a>'
-        f' &nbsp;|&nbsp; '
-        f'<a href="./{next_y}-{next_m:02d}.md">{next_y}.{next_m:02d} ➡</a>'
-        f'</p>\n\n'
+cal = calendar.Calendar(firstweekday=0)  # Monday start
+
+
+def ym(y, m):
+    return f"{y}-{m:02d}"
+
+
+def prev_next(y, m):
+    prev_y, prev_m = (y - 1, 12) if m == 1 else (y, m - 1)
+    next_y, next_m = (y + 1, 1) if m == 12 else (y, m + 1)
+    return prev_y, prev_m, next_y, next_m
+
+
+# ----------------------
+# 1️⃣ history md 생성
+# ----------------------
+history_file = HISTORY_DIR / f"{ym(year, month)}.md"
+
+if not history_file.exists():
+    py, pm, ny, nm = prev_next(year, month)
+
+    history_file.write_text(
+        f"""# 📆 {year}년 {month}월
+⬅ [{py}.{pm:02d}]({ym(py, pm)}.md) | [{ny}.{nm:02d}]({ym(ny, nm)}.md) ➡
+
+## {today_str}
+- 
+""",
+        encoding="utf-8"
     )
 
-    lines.append("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |")
-    lines.append("|----|----|----|----|----|----|----|")
+# ----------------------
+# 2️⃣ README 달력 생성
+# ----------------------
+py, pm, ny, nm = prev_next(year, month)
 
-    for week in cal.monthdayscalendar(YEAR, month):
-        row = []
-        for day in week:
-            if day == 0:
-                row.append(" ")
+lines = []
+lines.append("# 📚 Daily Engineering Calendar")
+lines.append("> One commit a day, one step closer.\n")
+lines.append("---\n")
+lines.append("## 🗓 Current Month")
+lines.append(f"### 📆 {year}년 {month}월")
+lines.append(
+    f"⬅ [{py}.{pm:02d}](history/{ym(py, pm)}.md) | "
+    f"[{ny}.{nm:02d}](history/{ym(ny, nm)}.md) ➡\n"
+)
+
+lines.append("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |")
+lines.append("|-----|-----|-----|-----|-----|-----|-----|")
+
+for week in cal.monthdayscalendar(year, month):
+    row = []
+    for day in week:
+        if day == 0:
+            row.append(" ")
+        else:
+            date_anchor = f"{year}-{month:02d}-{day:02d}"
+            link = f"[{day}](history/{ym(year, month)}.md#{date_anchor})"
+            if date_anchor == today_str:
+                row.append(f"**{link} 🔥**")
             else:
-                path = f"../{YEAR}/{month:02d}/{YEAR}-{month:02d}-{day:02d}.md"
-                row.append(f"[{day}]({path})")
-        lines.append("| " + " | ".join(row) + " |")
+                row.append(link)
+    lines.append("| " + " | ".join(row) + " |")
 
-    (BASE / f"{YEAR}-{month:02d}.md").write_text(
-        "\n".join(lines), encoding="utf-8"
-    )
+# ----------------------
+# 3️⃣ History 링크
+# ----------------------
+lines.append("\n---\n")
+lines.append("## 🗂 History")
+
+for m in range(1, 13):
+    lines.append(f"- 👉 [{year}년 {m}월](history/{ym(year, m)}.md)")
+
+README_PATH.write_text("\n".join(lines), encoding="utf-8")
+
+print("✅ Calendar & README generated")

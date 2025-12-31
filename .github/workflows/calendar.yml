@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.name "calendar-bot"
           git config user.email "calendar-bot@users.noreply.github.com"
-          git add history README.md
+          git add .
           git commit -m "chore: auto update calendar" || echo "no changes"
           git push origin HEAD

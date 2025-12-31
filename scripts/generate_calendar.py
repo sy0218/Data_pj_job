@@ -82,7 +82,7 @@ if not history_file.exists():
 py, pm, ny, nm = prev_next(year, month)
 
 lines = []
-lines.append("# 📚 Daily Study Calendar")
+lines.append("# 📚 하루 한 줄 개발 기록")
 lines.append("> One commit a day, one step closer.\n")
 lines.append("---\n")
 lines.append("## 🗓 Current Month")

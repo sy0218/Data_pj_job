@@ -42,13 +42,13 @@ if not DAY_FILE.exists():
     DAY_FILE.write_text(
         f"""# 📅 {today_str}
 
-## 🛠 What I did
+## 🛠 프로그래밍 ( 알고리즘 )
 - 
 
-## 📘 Learned
+## 📘 실습
 - 
 
-## 📝 Notes
+## 📝 이론
 - 
 """,
         encoding="utf-8"

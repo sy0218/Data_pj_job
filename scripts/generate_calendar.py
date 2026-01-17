@@ -33,7 +33,6 @@ def prev_next(y, m):
 
 def render_month_calendar(year, month, today_str=None, base_path=""):
     cal = calendar.Calendar(firstweekday=0)
-
     prefix = f"{base_path}/" if base_path else ""
 
     lines = []
@@ -78,17 +77,15 @@ if not DAY_FILE.exists():
     )
 
 # ----------------------
-# 1️⃣ history/YYYY-MM.md 생성 (월 네비 + 달력)
+# 1️⃣ history/YYYY-MM.md 생성 (상대경로 달력)
 # ----------------------
 history_file = HISTORY_DIR / f"{ym(year, month)}.md"
 
-if not history_file.exists():
-    py, pm, ny, nm = prev_next(year, month)
+py, pm, ny, nm = prev_next(year, month)
+calendar_md = render_month_calendar(year, month, base_path="..")
 
-    calendar_md = render_month_calendar(year, month)
-
-    history_file.write_text(
-        f"""# 📆 {year}년 {month}월
+history_file.write_text(
+    f"""# 📆 {year}년 {month}월
 
 <p align="center">
 <a href="./{ym(py, pm)}.md">⬅ {py}.{pm:02d}</a>
@@ -98,14 +95,12 @@ if not history_file.exists():
 
 {calendar_md}
 """,
-        encoding="utf-8"
-    )
+    encoding="utf-8"
+)
 
 # ----------------------
-# 2️⃣ README.md 생성 (월 네비 + 🔥 달력)
+# 2️⃣ README.md 생성 (절대 기준 달력 + 🔥)
 # ----------------------
-py, pm, ny, nm = prev_next(year, month)
-
 lines = []
 lines.append("# 📚 하루 한 줄 개발 기록")
 lines.append("> One commit a day, one step closer.\n")
